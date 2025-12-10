@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash App - المتجر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --secondary: #F5F5F5;
+            --accent: #FF9800;
+            --accent-dark: #F57C00;
+            --text: #333;
+            --text-light: #666;
+            --danger: #D32F2F;
+            --danger-dark: #C62828;
+            --white: #FFFFFF;
+            --gray: #E0E0E0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* ترويسة الصفحة */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 20px 25px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 32px;
+        }
+        
+        .user-info {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 250px;
+        }
+        
+        .user-info h3 {
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+        
+        .user-info p {
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .balance {
+            background: var(--accent);
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* قسم تسجيل الدخول */
+        .auth-section {
+            background: var(--white);
+            padding: 35px;
+            border-radius: var(--radius);
+            margin: 50px auto;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .auth-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 16px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 18px;
+        }
+        
+        input {
+            width: 100%;
+            /* تم زيادة المساحة على اليمين لتبعد النص عن الأيقونة */
+            padding: 15px 50px 15px 20px; 
+            border: 2px solid var(--gray);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: var(--secondary);
+            text-align: right; /* ضمان أن النص يبدأ من اليمين بشكل جيد */
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+            background: var(--white);
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--white);
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, var(--accent), var(--accent-dark));
+            color: var(--white);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, var(--danger), var(--danger-dark));
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(211, 47, 47, 0.3);
+        }
+        
+        .btn-small {
+            padding: 10px 18px;
+            font-size: 15px;
+        }
+        
+        /* قسم المنتجات */
+        .products-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--secondary);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .section-title {
+            font-size: 26px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 1px solid var(--gray);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 25px;
+        }
+        
+        .product-name {
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .product-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .seller-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 2px dashed var(--gray);
+        }
+        
+        .seller-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .seller-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .seller-name {
+            font-weight: 700;
+            font-size: 17px;
+        }
+        
+        .seller-id {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .product-stock {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(46, 125, 50, 0.1);
+            border-radius: 8px;
+        }
+        
+        .product-stock.out-of-stock {
+            color: var(--danger);
+            background: rgba(211, 47, 47, 0.1);
+        }
+        
+        .product-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .manage-products {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(to right, #E8F5E9, #C8E6C9);
+            border-radius: var(--radius);
+            border: 2px dashed var(--primary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        /* إشعارات */
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 18px 30px;
+            border-radius: 10px;
+            color: var(--white);
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notification.success {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        }
+        
+        .notification.error {
+            background: linear-gradient(to right, var(--danger), var(--danger-dark));
+        }
+        
+        .notification.info {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* نافذة تأكيد الشراء */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(3px);
+        }
+        
+        .modal {
+            background: var(--white);
+            padding: 35px;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 90%;
+            animation: modalFadeIn 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .modal p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 18px;
+            margin-top: 30px;
+        }
+        
+        /* منتجاتي */
+        .my-products-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .my-product-card {
+            background: var(--white);
+            padding: 22px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--accent);
+        }
+        
+        /* تحسينات للجوال */
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                text-align: center;
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid, .my-products-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-section {
+                padding: 25px 20px;
+                margin: 30px auto;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+            
+            .btn-small {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .auth-section, .products-section, .manage-products {
+                padding: 20px 15px;
+            }
+            
+            .modal {
+                padding: 25px 20px;
+            }
+            
+            .btn {
+                padding: 13px 20px;
+                font-size: 16px;
+            }
+        }
+        
+        /* تحميل */
+        .loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--gray);
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* تذييل الصفحة */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            color: var(--text-light);
+            font-size: 14px;
+            border-top: 1px solid var(--gray);
+        }
+        
+        /* فئات المنتجات */
+        .category-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .category-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .category-btn:hover:not(.active) {
+            background: var(--gray);
+        }
+        
+        /* رسالة فارغة */
+        .empty-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+        
+        .empty-message i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <div id="loader" class="loader">
+        <div class="loader-spinner"></div>
+        <p>جاري التحميل...</p>
+    </div>
+    
+    <div class="container">
+        <div id="authSection" class="auth-section">
+            <div class="auth-form">
+                <h2><i class="fas fa-store"></i> Cash App المتجر</h2>
+                <div class="form-group">
+                    <label for="userId"><i class="fas fa-user"></i> رقم المستخدم (ID)</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="userId" placeholder="أدخل رقم المستخدم الخاص بك" autocomplete="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> كلمة المرور</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password">
+                    </div>
+                </div>
+                <button id="loginBtn" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <p id="loginError" style="color: var(--danger); margin-top: 15px; text-align: center; display: none;">
+                    <i class="fas fa-exclamation-circle"></i> خطأ في اسم المستخدم أو كلمة المرور
+                </p>
+            </div>
+        </div>
+        
+        <div id="dashboard" style="display: none;">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cash App المتجر</span>
+                </div>
+                <div class="user-info">
+                    <h3 id="userName"><i class="fas fa-user-circle"></i> اسم المستخدم</h3>
+                    <p><i class="fas fa-id-badge"></i> رقم المستخدم: <span id="displayUserId">---</span></p>
+                    <p><i class="fas fa-calendar-alt"></i> آخر دخول: <span id="lastLogin">---</span></p>
+                </div>
+                <div class="balance">
+                    <i class="fas fa-coins"></i>
+                    <span>الرصيد: <span id="userBalance">0</span> دولار</span>
+                </div>
+            </header>
+            
+            <div class="manage-products">
+                <h3 style="margin-bottom: 25px; color: var(--primary); display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-box-open"></i> إدارة منتجاتي
+                </h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName"><i class="fas fa-tag"></i> اسم المنتج</label>
+                        <input type="text" id="productName" placeholder="أدخل اسم المنتج">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice"><i class="fas fa-dollar-sign"></i> السعر</label>
+                        <input type="number" id="productPrice" placeholder="السعر بالدولار" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock"><i class="fas fa-boxes"></i> الكمية</label>
+                        <input type="number" id="productStock" placeholder="الكمية المتاحة" min="1" value="1">
+                    </div>
+                </div>
+                <button id="addProductBtn" class="btn btn-secondary">
+                    <i class="fas fa-plus-circle"></i> إضافة منتج جديد
+                </button>
+                <div id="myProductsList" class="my-products-list" style="margin-top: 30px;"></div>
+            </div>
+            
+            <section class="products-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-shopping-bag"></i> المنتجات المتاحة للشراء
+                    </h2>
+                    <button id="logoutBtn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
+                </div>
+                <div id="productsList" class="products-grid"></div>
+            </section>
+            
+            <footer>
+                <p><i class="fas fa-code"></i> تم التطوير باستخدام Firebase Realtime Database</p>
+                <p>© 2025 Cash App - جميع الحقوق محفوظة</p>
+            </footer>
+        </div>
+        
+        <div id="purchaseModal" class="modal-overlay">
+            <div class="modal">
+                <h3><i class="fas fa-shopping-cart"></i> تأكيد عملية الشراء</h3>
+                <p>المنتج: <strong id="modalProductName"></strong></p>
+                <p>السعر: <strong id="modalProductPrice"></strong> دولار</p>
+                <p>البائع: <strong id="modalSellerName"></strong> (ID: <span id="modalSellerId"></span>)</p>
+                <p>رصيدك الحالي: <strong id="modalUserBalance"></strong> دولار</p>
+                <p>الرصيد بعد الشراء: <strong id="modalBalanceAfter"></strong> دولار</p>
+                <div class="modal-buttons">
+                    <button id="confirmPurchaseBtn" class="btn btn-primary">
+                        <i class="fas fa-check-circle"></i> نعم، تأكيد الشراء
+                    </button>
+                    <button id="cancelPurchaseBtn" class="btn">
+                        <i class="fas fa-times-circle"></i> إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification" style="display: none;"></div>
+    </div>
+    
+    <script type="module">
+        // استيراد مكتبات Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, remove, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+        
+        // ⚠️ تصحيح إعدادات Firebase بناءً على قاعدة البيانات الفعلية
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKGrxv_GT3T3krYeYY5C-o7VmvLkG-gw0",
+            authDomain: "cashapp-405b7.firebaseapp.com",
+            databaseURL: "https://cashapp-d0507-default-rtdb.firebaseio.com", // تم التصحيح هنا
+            projectId: "cashapp-405b7",
+            storageBucket: "cashapp-405b7.firebasestorage.app",
+            messagingSenderId: "146496743526",
+            appId: "1:146496743526:web:edc0318c7f3affa25465a7",
+            measurementId: "G-NMR38V1B9"
+        };
+        
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // عناصر DOM
+        const authSection = document.getElementById('authSection');
+        const dashboard = document.getElementById('dashboard');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userIdInput = document.getElementById('userId');
+        const passwordInput = document.getElementById('password');
+        const userNameElement = document.getElementById('userName');
+        const displayUserIdElement = document.getElementById('displayUserId');
+        const userBalanceElement = document.getElementById('userBalance');
+        const lastLoginElement = document.getElementById('lastLogin');
+        const productsList = document.getElementById('productsList');
+        const myProductsList = document.getElementById('myProductsList');
+        const productNameInput = document.getElementById('productName');
+        const productPriceInput = document.getElementById('productPrice');
+        const productStockInput = document.getElementById('productStock');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const purchaseModal = document.getElementById('purchaseModal');
+        const modalProductName = document.getElementById('modalProductName');
+        const modalProductPrice = document.getElementById('modalProductPrice');
+        const modalSellerName = document.getElementById('modalSellerName');
+        const modalSellerId = document.getElementById('modalSellerId');
+        const modalUserBalance = document.getElementById('modalUserBalance');
+        const modalBalanceAfter = document.getElementById('modalBalanceAfter');
+        const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
+        const cancelPurchaseBtn = document.getElementById('cancelPurchaseBtn');
+        const notification = document.getElementById('notification');
+        const loader = document.getElementById('loader');
+        
+        // متغيرات التطبيق
+        let currentUser = null;
+        let selectedProduct = null;
+        let userBalanceListener = null; // متغير للاستماع اللحظي للرصيد
+        
+        // مفاتيح التخزين المحلي
+        const LOCAL_STORAGE_USER_ID = 'currentUserId';
+        
+        // ========== إدارة التوثيق ==========
+        
+        /**
+         * دالة لتسجيل الدخول الفعلي للمستخدم.
+         * @param {string} userId - رقم المستخدم.
+         * @param {Object} userData - بيانات المستخدم من قاعدة البيانات.
+         */
+        async function completeLogin(userId, userData) {
+             currentUser = userData;
+             currentUser.id = userId; // تأكد من إضافة الـ ID إلى الكائن
+             
+             // تحديث وقت آخر دخول
+             const userRef = ref(database, 'users/' + userId);
+             await update(userRef, {
+                 lastLogin: new Date().toISOString()
+             });
+             
+             currentUser.lastLogin = new Date().toISOString();
+             
+             localStorage.setItem(LOCAL_STORAGE_USER_ID, userId); // تخزين الـ ID في التخزين المحلي
+             
+             showNotification('تم تسجيل الدخول بنجاح!', 'success');
+             switchToDashboard();
+             loadProducts();
+             loadMyProducts();
+             listenToUserBalance(userId); // بدء الاستماع للرصيد
+        }
+        
+        // تسجيل الدخول
+        loginBtn.addEventListener('click', async () => {
+            const userId = userIdInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!userId || !password) {
+                showNotification('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            showLoader();
+            loginError.style.display = 'none';
+            
+            try {
+                // البحث عن المستخدم في قاعدة البيانات
+                const userRef = ref(database, 'users/' + userId);
+                const snapshot = await get(userRef);
+                
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    
+                    // التحقق من كلمة المرور
+                    if (userData.password === password) {
+                        await completeLogin(userId, userData);
+                    } else {
+                        loginError.textContent = 'خطأ في كلمة المرور';
+                        loginError.style.display = 'block';
+                        showNotification('كلمة المرور غير صحيحة', 'error');
+                    }
+                } else {
+                    loginError.textContent = 'رقم المستخدم غير موجود';
+                    loginError.style.display = 'block';
+                    showNotification('رقم المستخدم غير موجود', 'error');
+                }
+            } catch (error) {
+                console.error('خطأ في تسجيل الدخول:', error);
+                showNotification('حدث خطأ أثناء تسجيل الدخول', 'error');
+            } finally {
+                hideLoader();
+            }
+        });
+        
+        // السماح بتسجيل الدخول بالضغط على Enter
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginBtn.click();
+            }
+        });
+        
+        // تسجيل الخروج
+        logoutBtn.addEventListener('click', () => {
+            if (userBalanceListener) {
+                userBalanceListener(); // إيقاف الاستماع للرصيد
+            }
+            currentUser = null;
+            localStorage.removeItem(LOCAL_STORAGE_USER_ID);
+            switchToAuth();
+            showNotification('تم تسجيل الخروج بنجاح', 'success');
+        });
+
+        // الاستماع اللحظي لتحديث رصيد المستخدم
+        function listenToUserBalance(userId) {
+            if (userBalanceListener) {
+                userBalanceListener(); // إيقاف المستمع السابق إذا وجد
+            }
+
+            const userMoneyRef = ref(database, 'users/' + userId + '/money');
+
+            // onValue ترجع دالة لإلغاء الاشتراك
+            userBalanceListener = onValue(userMoneyRef, (snapshot) => {
+                const newBalance = snapshot.val();
+                if (currentUser && newBalance !== null) {
+                    currentUser.money = newBalance;
+                    userBalanceElement.textContent = newBalance.toFixed(2);
+                }
+            }, (error) => {
+                console.error('خطأ في الاستماع لتحديث الرصيد:', error);
+                showNotification('خطأ في تحديث الرصيد اللحظي', 'error');
+            });
+        }
+        
+        // محاولة تسجيل الدخول التلقائي
+        async function attemptAutoLogin() {
+            const userId = localStorage.getItem(LOCAL_STORAGE_USER_ID);
+            if (!userId) {
+                switchToAuth();
+                return;
+            }
+
+            showLoader();
+            
+            try {
+                const userRef = ref(database, 'users/' + userId);
+                const snapshot = await get(userRef);
+                
+                if (snapshot.exists()) {
+                    await completeLogin(userId, snapshot.val());
+                    // لا نظهر إشعار نجاح هنا لأنه ليس تسجيل دخول فعلي جديد
+                } else {
+                    // لم يعد المستخدم موجوداً
+                    localStorage.removeItem(LOCAL_STORAGE_USER_ID);
+                    switchToAuth();
+                }
+            } catch (error) {
+                console.error('خطأ في تسجيل الدخول التلقائي:', error);
+                localStorage.removeItem(LOCAL_STORAGE_USER_ID);
+                switchToAuth();
+                showNotification('فشل تسجيل الدخول التلقائي', 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // ========== إدارة واجهة المستخدم ==========
+        
+        // التحويل إلى لوحة التحكم
+        function switchToDashboard() {
+            authSection.style.display = 'none';
+            dashboard.style.display = 'block';
+            
+            // تحديث معلومات المستخدم
+            userNameElement.textContent = currentUser.name;
+            displayUserIdElement.textContent = currentUser.id;
+            userBalanceElement.textContent = (currentUser.money || 0).toFixed(2);
+            
+            // تنسيق تاريخ آخر دخول
+            if (currentUser.lastLogin) {
+                const lastLoginDate = new Date(currentUser.lastLogin);
+                lastLoginElement.textContent = lastLoginDate.toLocaleDateString('ar-SA') + 
+                    ' ' + lastLoginDate.toLocaleTimeString('ar-SA');
+            }
+        }
+        
+        // التحويل إلى صفحة المصادقة
+        function switchToAuth() {
+            authSection.style.display = 'block';
+            dashboard.style.display = 'none';
+            userIdInput.value = '';
+            passwordInput.value = '';
+            userIdInput.focus();
+        }
+        
+        // ========== إدارة المنتجات ==========
+        
+        // إضافة منتج جديد
+        addProductBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                showNotification('يرجى تسجيل الدخول أولاً', 'error');
+                return;
+            }
+            
+            const name = productNameInput.value.trim();
+            const price = parseFloat(productPriceInput.value);
+            const stock = parseInt(productStockInput.value);
+            
+            if (!name) {
+                showNotification('يرجى إدخال اسم المنتج', 'error');
+                productNameInput.focus();
+                return;
+            }
+            
+            if (!price || price <= 0) {
+                showNotification('يرجى إدخال سعر صحيح', 'error');
+                productPriceInput.focus();
+                return;
+            }
+            
+            if (!stock || stock < 1) {
+                showNotification('يرجى إدخال كمية صحيحة', 'error');
+                productStockInput.focus();
+                return;
+            }
+            
+            showLoader();
+            
+            try {
+                // إنشاء معرف فريد للمنتج
+                const productRef = push(ref(database, 'products'));
+                const productId = productRef.key;
+                
+                const productData = {
+                    id: productId,
+                    name: name,
+                    price: price,
+                    stock: stock,
+                    sellerId: currentUser.id,
+                    sellerName: currentUser.name,
+                    createdAt: new Date().toISOString()
+                };
+                
+                await set(productRef, productData);
+                
+                // تفريغ الحقول
+                productNameInput.value = '';
+                productPriceInput.value = '';
+                productStockInput.value = '1';
+                
+                showNotification('تم إضافة المنتج بنجاح!', 'success');
+                // لا نحتاج لـ loadProducts/loadMyProducts يدوياً بفضل onValue
+            } catch (error) {
+                console.error('خطأ في إضافة المنتج:', error);
+                showNotification('خطأ في إضافة المنتج', 'error');
+            } finally {
+                hideLoader();
+                productNameInput.focus();
+            }
+        });
+        
+        // تحميل المنتجات المتاحة للشراء
+        function loadProducts() {
+            const productsRef = ref(database, 'products');
+            const productsQuery = query(productsRef, orderByChild('createdAt'));
+            
+            onValue(productsQuery, (snapshot) => {
+                productsList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    productsList.innerHTML = `
+                        <div class="empty-message">
+                            <i class="fas fa-box-open"></i>
+                            <h3>لا توجد منتجات متاحة حالياً</h3>
+                            <p>كن أول من يضيف منتجاً!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const products = snapshot.val();
+                let hasProducts = false;
+                
+                // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
+                const productsArray = Object.keys(products).map(key => ({ 
+                    id: key, 
+                    ...products[key] 
+                })).reverse(); 
+
+                productsArray.forEach(product => {
+                    hasProducts = true;
+                    createProductCard(product, product.id);
+                });
+
+                if (!hasProducts) {
+                    productsList.innerHTML = `
+                        <div class="empty-message">
+                            <i class="fas fa-box-open"></i>
+                            <h3>لا توجد منتجات متاحة حالياً</h3>
+                            <p>كن أول من يضيف منتجاً!</p>
+                        </div>
+                    `;
+                }
+            }, (error) => {
+                console.error('خطأ في تحميل المنتجات:', error);
+                showNotification('خطأ في تحميل المنتجات', 'error');
+            });
+        }
+        
+        // تحميل منتجات المستخدم
+        function loadMyProducts() {
+            if (!currentUser) return;
+            
+            const productsRef = ref(database, 'products');
+            const productsQuery = query(productsRef, orderByChild('createdAt'));
+            
+            onValue(productsQuery, (snapshot) => {
+                myProductsList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    myProductsList.innerHTML = `
+                        <div class="empty-message">
+                            <i class="fas fa-boxes"></i>
+                            <h3>لم تقم بإضافة أي منتجات بعد</h3>
+                            <p>ابدأ بإضافة منتجك الأول!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const products = snapshot.val();
+                let hasMyProducts = false;
+                
+                // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
+                const productsArray = Object.keys(products).map(key => ({ 
+                    id: key, 
+                    ...products[key] 
+                })).reverse();
+                
+                productsArray.forEach(product => {
+                    if (product.sellerId === currentUser.id) {
+                        hasMyProducts = true;
+                        createMyProductCard(product, product.id);
+                    }
+                });
+                
+                if (!hasMyProducts) {
+                    myProductsList.innerHTML = `
+                        <div class="empty-message">
+                            <i class="fas fa-boxes"></i>
+                            <h3>لم تقم بإضافة أي منتجات بعد</h3>
+                            <p>ابدأ بإضافة منتجك الأول!</p>
+                        </div>
+                    `;
+                }
+            }, (error) => {
+                console.error('خطأ في تحميل منتجاتي:', error);
+                showNotification('خطأ في تحميل منتجاتي', 'error');
+            });
+        }
+        
+        // إنشاء بطاقة منتج للعرض
+        function createProductCard(product, productId) {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            
+            const isOutOfStock = product.stock <= 0;
+            // يجب التحقق من وجود currentUser لأنه قد يتم تشغيل loadProducts قبل تسجيل الدخول التلقائي
+            const canBuy = currentUser && !isOutOfStock && currentUser.id !== product.sellerId; 
+            const isMyProduct = currentUser && currentUser.id === product.sellerId;
+            
+            // الحصول على الحرف الأول من اسم البائع
+            const sellerInitial = product.sellerName ? product.sellerName.charAt(0) : '?';
+            
+            productCard.innerHTML = `
+                <div class="product-header">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">
+                        <i class="fas fa-dollar-sign"></i> ${product.price.toFixed(2)}
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="seller-info">
+                        <div class="seller-details">
+                            <div class="seller-avatar">${sellerInitial}</div>
+                            <div>
+                                <div class="seller-name">${product.sellerName || 'بائع'}</div>
+                                <div class="seller-id">ID: ${product.sellerId}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-stock ${isOutOfStock ? 'out-of-stock' : ''}">
+                        <i class="fas ${isOutOfStock ? 'fa-times-circle' : 'fa-check-circle'}"></i>
+                        ${isOutOfStock ? 'نفذت الكمية' : `الكمية المتاحة: ${product.stock}`}
+                    </div>
+                    <div class="product-actions">
+                        ${canBuy ? 
+                            `<button class="btn btn-primary btn-small" onclick="preparePurchase('${productId}')">
+                                <i class="fas fa-shopping-cart"></i> شراء
+                            </button>` : 
+                            isMyProduct ?
+                            `<button class="btn btn-secondary btn-small" disabled>
+                                <i class="fas fa-user"></i> منتجي
+                            </button>` :
+                            isOutOfStock ? 
+                            `<button class="btn btn-small" disabled>
+                                <i class="fas fa-ban"></i> نفذت الكمية
+                            </button>` : 
+                            `<button class="btn btn-small" disabled>
+                                <i class="fas fa-info-circle"></i> غير متاح
+                            </button>`
+                        }
+                    </div>
+                </div>
+            `;
+            
+            productsList.appendChild(productCard);
+        }
+        
+        // إنشاء بطاقة منتج المستخدم لإدارته
+        function createMyProductCard(product, productId) {
+            const productCard = document.createElement('div');
+            productCard.className = 'my-product-card';
+            
+            const createdAt = new Date(product.createdAt);
+            const formattedDate = createdAt.toLocaleDateString('ar-SA');
+            
+            productCard.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <h4 style="margin-bottom: 8px; color: var(--primary); font-size: 18px;">
+                            <i class="fas fa-cube"></i> ${product.name}
+                        </h4>
+                        <div style="display: flex; gap: 20px; margin-bottom: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-dollar-sign" style="color: var(--accent);"></i>
+                                <strong>${product.price.toFixed(2)} دولار</strong>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-box" style="color: var(--primary);"></i>
+                                <strong>${product.stock} وحدة</strong>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-calendar" style="color: var(--text-light);"></i>
+                                <span style="font-size: 13px;">${formattedDate}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary btn-small" onclick="editProduct('${productId}', ${product.price}, ${product.stock})">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteProduct('${productId}')">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            myProductsList.appendChild(productCard);
+        }
+        
+        // ========== إدارة عمليات الشراء ==========
+        
+        // التحضير لعملية الشراء
+        window.preparePurchase = async function(productId) {
+            if (!currentUser) {
+                showNotification('يرجى تسجيل الدخول أولاً', 'error');
+                return;
+            }
+            
+            showLoader();
+            
+            try {
+                const productRef = ref(database, 'products/' + productId);
+                const snapshot = await get(productRef);
+                
+                if (snapshot.exists()) {
+                    selectedProduct = {
+                        id: productId,
+                        ...snapshot.val()
+                    };
+                    
+                    // تحديث رصيد المستخدم قبل العرض للتأكد من أحدث البيانات
+                    const buyerRef = ref(database, 'users/' + currentUser.id);
+                    const buyerSnapshot = await get(buyerRef);
+                    const currentBalance = buyerSnapshot.val().money;
+                    
+                    if (selectedProduct.stock <= 0) {
+                        showNotification('نفذت كمية هذا المنتج', 'error');
+                        return;
+                    }
+                    
+                    if (currentUser.id === selectedProduct.sellerId) {
+                        showNotification('لا يمكنك شراء منتجك الخاص', 'error');
+                        return;
+                    }
+                    
+                    if (currentBalance < selectedProduct.price) {
+                        showNotification('رصيدك غير كافٍ للشراء', 'error');
+                        return;
+                    }
+                    
+                    // عرض نافذة التأكيد
+                    modalProductName.textContent = selectedProduct.name;
+                    modalProductPrice.textContent = selectedProduct.price.toFixed(2);
+                    modalSellerName.textContent = selectedProduct.sellerName;
+                    modalSellerId.textContent = selectedProduct.sellerId;
+                    modalUserBalance.textContent = currentBalance.toFixed(2);
+                    modalBalanceAfter.textContent = (currentBalance - selectedProduct.price).toFixed(2);
+                    purchaseModal.style.display = 'flex';
+                } else {
+                    showNotification('المنتج غير موجود', 'error');
+                }
+            } catch (error) {
+                console.error('خطأ في تحضير الشراء:', error);
+                showNotification('حدث خطأ أثناء تحضير الشراء', 'error');
+            } finally {
+                hideLoader();
+            }
+        };
+        
+        // تأكيد عملية الشراء
+        confirmPurchaseBtn.addEventListener('click', async () => {
+            if (!selectedProduct || !currentUser) return;
+            
+            showLoader();
+            
+            try {
+                // 1. التحقق من أن المنتج لا يزال متاحاً
+                const productRef = ref(database, 'products/' + selectedProduct.id);
+                const productSnapshot = await get(productRef);
+                
+                if (!productSnapshot.exists() || productSnapshot.val().stock <= 0) {
+                    showNotification('نفذت كمية هذا المنتج', 'error');
+                    purchaseModal.style.display = 'none';
+                    return;
+                }
+                
+                // 2. التحقق من أن المشتري لديه رصيد كافٍ (مرة أخرى للتأكد)
+                const buyerRef = ref(database, 'users/' + currentUser.id);
+                const buyerSnapshot = await get(buyerRef);
+                const currentBuyerMoney = buyerSnapshot.val().money;
+                
+                if (!buyerSnapshot.exists() || currentBuyerMoney < selectedProduct.price) {
+                    showNotification('رصيدك غير كافٍ. تم تحديث رصيدك.', 'error');
+                    purchaseModal.style.display = 'none';
+                    return;
+                }
+                
+                // 3. تنفيذ عملية الشراء (استخدام المعاملات لضمان التناسق في بيئة الإنتاج)
+                
+                // أ) خصم المبلغ من رصيد المشتري
+                const newBuyerBalance = currentBuyerMoney - selectedProduct.price;
+                await update(buyerRef, { money: newBuyerBalance });
+                
+                // ب) إضافة المبلغ إلى رصيد البائع
+                const sellerRef = ref(database, 'users/' + selectedProduct.sellerId);
+                const sellerSnapshot = await get(sellerRef);
+                const newSellerBalance = (sellerSnapshot.val().money || 0) + selectedProduct.price;
+                await update(sellerRef, { money: newSellerBalance });
+                
+                // ج) تقليل كمية المنتج
+                const newStock = productSnapshot.val().stock - 1;
+                await update(productRef, { stock: newStock });
+                
+                // د) تسجيل عملية الشراء
+                const purchaseRef = push(ref(database, 'purchases'));
+                await set(purchaseRef, {
+                    productId: selectedProduct.id,
+                    productName: selectedProduct.name,
+                    buyerId: currentUser.id,
+                    buyerName: currentUser.name,
+                    sellerId: selectedProduct.sellerId,
+                    sellerName: selectedProduct.sellerName,
+                    price: selectedProduct.price,
+                    date: new Date().toISOString()
+                });
+                
+                // 4. تحديث بيانات المستخدم الحالي (سيتم تحديث الرصيد عبر المستمع اللحظي)
+                currentUser.money = newBuyerBalance;
+                
+                showNotification('تمت عملية الشراء بنجاح!', 'success');
+                purchaseModal.style.display = 'none';
+                selectedProduct = null;
+                
+            } catch (error) {
+                console.error('خطأ في عملية الشراء:', error);
+                showNotification('حدث خطأ أثناء عملية الشراء', 'error');
+            } finally {
+                hideLoader();
+            }
+        });
+        
+        // إلغاء عملية الشراء
+        cancelPurchaseBtn.addEventListener('click', () => {
+            purchaseModal.style.display = 'none';
+            selectedProduct = null;
+        });
+        
+        // ========== إدارة المنتجات (البائع) ==========
+        
+        // تعديل سعر أو كمية المنتج
+        window.editProduct = function(productId, currentPrice, currentStock) {
+            const newPriceInput = prompt('أدخل السعر الجديد للمنتج:', currentPrice);
+            if (newPriceInput === null) return;
+            
+            const price = parseFloat(newPriceInput);
+            if (isNaN(price) || price < 0) {
+                showNotification('السعر غير صحيح', 'error');
+                return;
+            }
+            
+            const newStockInput = prompt('أدخل الكمية الجديدة للمنتج:', currentStock);
+            if (newStockInput === null) return;
+            
+            const stock = parseInt(newStockInput);
+            if (isNaN(stock) || stock < 0) {
+                showNotification('الكمية غير صحيحة', 'error');
+                return;
+            }
+            
+            showLoader();
+            
+            const productRef = ref(database, 'products/' + productId);
+            
+            update(productRef, {
+                price: price,
+                stock: stock
+            }).then(() => {
+                showNotification('تم تعديل المنتج بنجاح', 'success');
+            }).catch((error) => {
+                console.error('خطأ في تعديل المنتج:', error);
+                showNotification('خطأ في تعديل المنتج', 'error');
+            }).finally(() => {
+                hideLoader();
+            });
+        };
+        
+        // حذف المنتج
+        window.deleteProduct = function(productId) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                return;
+            }
+            
+            showLoader();
+            
+            const productRef = ref(database, 'products/' + productId);
+            
+            remove(productRef).then(() => {
+                showNotification('تم حذف المنتج بنجاح', 'success');
+            }).catch((error) => {
+                console.error('خطأ في حذف المنتج:', error);
+                showNotification('خطأ في حذف المنتج', 'error');
+            }).finally(() => {
+                hideLoader();
+            });
+        };
+        
+        // ========== أدوات مساعدة ==========
+        
+        // عرض الإشعارات
+        function showNotification(message, type) {
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 4000);
+        }
+        
+        // عرض/إخفاء مؤشر التحميل
+        function showLoader() {
+            loader.style.display = 'flex';
+        }
+        
+        function hideLoader() {
+            loader.style.display = 'none';
+        }
+        
+        // التحقق من تسجيل الدخول عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            attemptAutoLogin();
+        });
+    </script>
+</body>
+</html>
