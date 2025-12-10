@@ -759,20 +759,20 @@
     </div>
     
     <script type="module">
-        // استيراد مكتبات Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getDatabase, ref, set, get, update, remove, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+        // 🚨 تم التحديث إلى الإصدار 12.6.0 وإضافة firebase-database.js
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, remove, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
         
-        // ⚠️ تصحيح إعدادات Firebase بناءً على قاعدة البيانات الفعلية
+        // ⚠️ تم تحديث إعدادات Firebase لتتوافق مع الإعدادات التي أرسلتها
         const firebaseConfig = {
             apiKey: "AIzaSyAKGrxv_GT3T3krYeYY5C-o7VmvLkG-gw0",
             authDomain: "cashapp-405b7.firebaseapp.com",
-            databaseURL: "https://cashapp-d0507-default-rtdb.firebaseio.com", 
+            databaseURL: "https://cashapp-405b7-default-rtdb.firebaseio.com", // استخدام الـ URL الجديد الذي أرسلته
             projectId: "cashapp-405b7",
             storageBucket: "cashapp-405b7.firebasestorage.app",
             messagingSenderId: "146496743526",
             appId: "1:146496743526:web:edc0318c7f3affa25465a7",
-            measurementId: "G-NMR38V1B9"
+            measurementId: "G-NWMR38V1B9"
         };
         
         // تهيئة Firebase
@@ -855,7 +855,7 @@
                 return;
             }
             
-            showLoader();
+            showLoader('جاري تسجيل الدخول...');
             loginError.style.display = 'none';
             
             try {
@@ -870,21 +870,23 @@
                     if (userData.password === password) {
                         await completeLogin(userId, userData);
                     } else {
-                        loginError.textContent = 'كلمة المرور غير صحيحة';
+                        // إظهار رسالة الخطأ الموحدة
+                        loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة';
                         loginError.style.display = 'block';
                         showNotification('كلمة المرور غير صحيحة', 'error');
                     }
                 } else {
-                    loginError.textContent = 'رقم المستخدم غير موجود';
+                    // إظهار رسالة الخطأ الموحدة
+                    loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة';
                     loginError.style.display = 'block';
                     showNotification('رقم المستخدم غير موجود', 'error');
                 }
             } catch (error) {
-                console.error('خطأ في تسجيل الدخول:', error);
+                console.error('خطأ في تسجيل الدخول/الاتصال:', error);
                 // رسالة موحدة للخطأ في الاتصال/التحقق
                 loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة'; 
                 loginError.style.display = 'block';
-                showNotification('فشل تسجيل الدخول. يرجى التأكد من بياناتك والاتصال بالإنترنت.', 'error');
+                showNotification('فشل تسجيل الدخول. يرجى التأكد من بياناتك والاتصال بقاعدة البيانات.', 'error');
             } finally {
                 hideLoader();
             }
@@ -946,7 +948,7 @@
                 return;
             }
 
-            // showLoader() تم استدعاؤه بالفعل في بداية DOMContentLoaded
+            showLoader('جاري استعادة جلسة المستخدم...');
             
             try {
                 const userRef = ref(database, 'users/' + userId);
@@ -1031,7 +1033,7 @@
                 return;
             }
             
-            showLoader();
+            showLoader('جاري إضافة المنتج...');
             
             try {
                 // إنشاء معرف فريد للمنتج
@@ -1056,7 +1058,6 @@
                 productStockInput.value = '1';
                 
                 showNotification('تم إضافة المنتج بنجاح!', 'success');
-                // لا نحتاج لـ loadProducts/loadMyProducts يدوياً بفضل onValue
             } catch (error) {
                 console.error('خطأ في إضافة المنتج:', error);
                 showNotification('خطأ في إضافة المنتج', 'error');
@@ -1255,7 +1256,7 @@
                 return;
             }
             
-            showLoader();
+            showLoader('جاري التحقق من توفر المنتج...');
             
             try {
                 const productRef = ref(database, 'products/' + productId);
@@ -1310,7 +1311,7 @@
         confirmPurchaseBtn.addEventListener('click', async () => {
             if (!selectedProduct || !currentUser) return;
             
-            showLoader();
+            showLoader('جاري إتمام عملية الشراء...');
             
             try {
                 // 1. التحقق من أن المنتج لا يزال متاحاً
@@ -1406,7 +1407,7 @@
                 return;
             }
             
-            showLoader();
+            showLoader('جاري تحديث المنتج...');
             
             const productRef = ref(database, 'products/' + productId);
             
@@ -1429,7 +1430,7 @@
                 return;
             }
             
-            showLoader();
+            showLoader('جاري حذف المنتج...');
             
             const productRef = ref(database, 'products/' + productId);
             
