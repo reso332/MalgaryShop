@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MalgrayShop</title>
+    <title>Cash App - المتجر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -70,37 +70,49 @@
             font-size: 32px;
         }
         
+        /* تجميع معلومات المستخدم والرصيد لضبط الموقع */
+        .user-details-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alignment to the left in RTL */
+            gap: 10px;
+        }
+        
         .user-info {
-            text-align: left;
+            text-align: right;
             background: rgba(255, 255, 255, 0.15);
-            padding: 15px 20px;
+            padding: 10px 15px;
             border-radius: 10px;
-            min-width: 250px;
+            min-width: unset;
         }
         
         .user-info h3 {
             margin-bottom: 8px;
             font-size: 20px;
-        }
-        
-        .user-info p {
-            font-size: 14px;
-            opacity: 0.9;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-direction: row-reverse; /* For proper icon alignment */
+        }
+        
+        .user-info p {
+            font-size: 15px;
+            opacity: 1;
+            display: block;
+            margin-bottom: 0;
         }
         
         .balance {
-            background: var(--accent);
-            padding: 15px 25px;
+            background: var(--white); /* تغيير اللون للخلفية البيضاء */
+            color: var(--text); /* تغيير لون النص */
+            padding: 10px 15px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         /* قسم تسجيل الدخول */
@@ -153,7 +165,6 @@
         
         .input-with-icon i {
             position: absolute;
-            /* تم نقل الأيقونة لليسار قليلاً */
             right: 15px; 
             top: 50%;
             transform: translateY(-50%);
@@ -163,14 +174,13 @@
         
         input {
             width: 100%;
-            /* تم زيادة المساحة على اليمين لتبعد النص عن الأيقونة */
             padding: 15px 50px 15px 20px; 
             border: 2px solid var(--gray);
             border-radius: 10px;
             font-size: 16px;
             transition: all 0.3s;
             background: var(--secondary);
-            text-align: right; /* ضمان أن النص يبدأ من اليمين بشكل جيد */
+            text-align: right;
         }
         
         input:focus {
@@ -383,6 +393,12 @@
             border: 2px dashed var(--primary);
         }
         
+        .manage-products h3 {
+            margin-bottom: 25px; 
+            border-bottom: 2px solid var(--primary-dark); 
+            padding-bottom: 15px;
+        }
+        
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -425,7 +441,7 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* نافذة تأكيد الشراء */
+        /* نافذة تأكيد الشراء ونافذة إضافة المنتج */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -448,6 +464,10 @@
             width: 90%;
             animation: modalFadeIn 0.3s ease;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        #addProductModal .modal {
+            max-width: 600px; /* توسيع مودال إضافة المنتج قليلاً */
         }
         
         @keyframes modalFadeIn {
@@ -494,6 +514,33 @@
             border-left: 5px solid var(--accent);
         }
         
+        /* زر الإجراء العائم (FAB) لإضافة منتج */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            left: 30px; /* اليسار في وضع RTL */
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 15px; /* شكل مربع بزوايا مستديرة */
+            display: none; /* إخفاء مبدئيا */
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            box-shadow: 0 8px 16px rgba(46, 125, 50, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 12px 20px rgba(46, 125, 50, 0.5);
+        }
+
         /* تحسينات للجوال */
         @media (max-width: 992px) {
             .products-grid {
@@ -509,9 +556,12 @@
                 text-align: center;
             }
             
+            .user-details-group {
+                align-items: center; /* توسيط العناصر في وضع الجوال */
+            }
+
             .user-info {
                 text-align: center;
-                min-width: 100%;
             }
         }
         
@@ -543,28 +593,9 @@
             }
         }
         
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .auth-section, .products-section, .manage-products {
-                padding: 20px 15px;
-            }
-            
-            .modal {
-                padding: 25px 20px;
-            }
-            
-            .btn {
-                padding: 13px 20px;
-                font-size: 16px;
-            }
-        }
-        
         /* تحميل */
         .loader {
-            display: flex; /* إظهار مبدئيًا حتى نهاية تحميل الكود */
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
@@ -600,33 +631,6 @@
             color: var(--text-light);
             font-size: 14px;
             border-top: 1px solid var(--gray);
-        }
-        
-        /* فئات المنتجات */
-        .category-filter {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .category-btn {
-            padding: 10px 20px;
-            background: var(--secondary);
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-        
-        .category-btn.active {
-            background: var(--primary);
-            color: var(--white);
-        }
-        
-        .category-btn:hover:not(.active) {
-            background: var(--gray);
         }
         
         /* رسالة فارغة */
@@ -683,40 +687,18 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span>Cash App المتجر</span>
                 </div>
-                <div class="user-info">
-                    <h3 id="userName"><i class="fas fa-user-circle"></i> اسم المستخدم</h3>
-                    <p><i class="fas fa-id-badge"></i> رقم المستخدم: <span id="displayUserId">---</span></p>
-                    <p><i class="fas fa-calendar-alt"></i> آخر دخول: <span id="lastLogin">---</span></p>
-                </div>
-                <div class="balance">
-                    <i class="fas fa-coins"></i>
-                    <span>الرصيد: <span id="userBalance">0.00</span> دولار</span>
+                
+                <div class="user-details-group">
+                    <div class="user-info">
+                        <h3 id="userName"><i class="fas fa-user-circle"></i> اسم المستخدم</h3>
+                        <p><i class="fas fa-id-badge"></i> رقم المستخدم: <span id="displayUserId">---</span></p>
+                        </div>
+                    <div class="balance">
+                        <i class="fas fa-coins"></i>
+                        <span>الرصيد: <span id="userBalance">0.00</span> دولار</span>
+                    </div>
                 </div>
             </header>
-            
-            <div class="manage-products">
-                <h3 style="margin-bottom: 25px; color: var(--primary); display: flex; align-items: center; gap: 12px;">
-                    <i class="fas fa-box-open"></i> إدارة منتجاتي
-                </h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="productName"><i class="fas fa-tag"></i> اسم المنتج</label>
-                        <input type="text" id="productName" placeholder="أدخل اسم المنتج">
-                    </div>
-                    <div class="form-group">
-                        <label for="productPrice"><i class="fas fa-dollar-sign"></i> السعر</label>
-                        <input type="number" id="productPrice" placeholder="السعر بالدولار" min="0" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="productStock"><i class="fas fa-boxes"></i> الكمية</label>
-                        <input type="number" id="productStock" placeholder="الكمية المتاحة" min="1" value="1">
-                    </div>
-                </div>
-                <button id="addProductBtn" class="btn btn-secondary">
-                    <i class="fas fa-plus-circle"></i> إضافة منتج جديد
-                </button>
-                <div id="myProductsList" class="my-products-list" style="margin-top: 30px;"></div>
-            </div>
             
             <section class="products-section">
                 <div class="section-header">
@@ -730,10 +712,49 @@
                 <div id="productsList" class="products-grid"></div>
             </section>
             
+            <div class="manage-products">
+                <h3 style="color: var(--primary); display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-list-alt"></i> منتجاتي المعروضة
+                </h3>
+                <div id="myProductsList" class="my-products-list"></div>
+                </div>
+            
             <footer>
                 <p><i class="fas fa-code"></i> تم التطوير باستخدام Firebase Realtime Database</p>
                 <p>© 2025 Cash App - جميع الحقوق محفوظة</p>
             </footer>
+        </div>
+        
+        <button id="fabAddProduct" class="fab" title="إضافة منتج جديد" style="display: none;">
+            <i class="fas fa-plus"></i>
+        </button>
+        
+        <div id="addProductModal" class="modal-overlay">
+            <div class="modal">
+                <h3><i class="fas fa-plus-square"></i> إضافة منتج جديد</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName"><i class="fas fa-tag"></i> اسم المنتج</label>
+                        <input type="text" id="productName" placeholder="أدخل اسم المنتج" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice"><i class="fas fa-dollar-sign"></i> السعر</label>
+                        <input type="number" id="productPrice" placeholder="السعر بالدولار" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock"><i class="fas fa-boxes"></i> الكمية</label>
+                        <input type="number" id="productStock" placeholder="الكمية المتاحة" min="1" value="1">
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="addProductBtn" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> حفظ المنتج
+                    </button>
+                    <button id="cancelAddProductBtn" class="btn btn-danger">
+                        <i class="fas fa-times-circle"></i> إلغاء
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div id="purchaseModal" class="modal-overlay">
@@ -759,15 +780,15 @@
     </div>
     
     <script type="module">
-        // 🚨 تم التحديث إلى الإصدار 12.6.0 وإضافة firebase-database.js
+        // استيراد مكتبات Firebase (الإصدار 12.6.0)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getDatabase, ref, set, get, update, remove, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
         
-        // ⚠️ تم تحديث إعدادات Firebase لتتوافق مع الإعدادات التي أرسلتها
+        // إعدادات Firebase التي أرسلتها
         const firebaseConfig = {
             apiKey: "AIzaSyAKGrxv_GT3T3krYeYY5C-o7VmvLkG-gw0",
             authDomain: "cashapp-405b7.firebaseapp.com",
-            databaseURL: "https://cashapp-405b7-default-rtdb.firebaseio.com", // استخدام الـ URL الجديد الذي أرسلته
+            databaseURL: "https://cashapp-405b7-default-rtdb.firebaseio.com", 
             projectId: "cashapp-405b7",
             storageBucket: "cashapp-405b7.firebasestorage.app",
             messagingSenderId: "146496743526",
@@ -790,13 +811,20 @@
         const userNameElement = document.getElementById('userName');
         const displayUserIdElement = document.getElementById('displayUserId');
         const userBalanceElement = document.getElementById('userBalance');
-        const lastLoginElement = document.getElementById('lastLogin');
+        // const lastLoginElement = document.getElementById('lastLogin'); // تم حذفه من HTML
         const productsList = document.getElementById('productsList');
         const myProductsList = document.getElementById('myProductsList');
+        
+        // عناصر مودال إضافة المنتج
+        const fabAddProduct = document.getElementById('fabAddProduct');
+        const addProductModal = document.getElementById('addProductModal');
+        const cancelAddProductBtn = document.getElementById('cancelAddProductBtn');
         const productNameInput = document.getElementById('productName');
         const productPriceInput = document.getElementById('productPrice');
         const productStockInput = document.getElementById('productStock');
         const addProductBtn = document.getElementById('addProductBtn');
+        
+        // عناصر مودال الشراء
         const purchaseModal = document.getElementById('purchaseModal');
         const modalProductName = document.getElementById('modalProductName');
         const modalProductPrice = document.getElementById('modalProductPrice');
@@ -812,7 +840,7 @@
         // متغيرات التطبيق
         let currentUser = null;
         let selectedProduct = null;
-        let userBalanceListener = null; // متغير للاستماع اللحظي للرصيد
+        let userBalanceListener = null; 
         
         // مفاتيح التخزين المحلي
         const LOCAL_STORAGE_USER_ID = 'currentUserId';
@@ -821,12 +849,10 @@
         
         /**
          * دالة لتسجيل الدخول الفعلي للمستخدم.
-         * @param {string} userId - رقم المستخدم.
-         * @param {Object} userData - بيانات المستخدم من قاعدة البيانات.
          */
         async function completeLogin(userId, userData) {
              currentUser = userData;
-             currentUser.id = userId; // تأكد من إضافة الـ ID إلى الكائن
+             currentUser.id = userId; 
              
              // تحديث وقت آخر دخول
              const userRef = ref(database, 'users/' + userId);
@@ -836,13 +862,13 @@
              
              currentUser.lastLogin = new Date().toISOString();
              
-             localStorage.setItem(LOCAL_STORAGE_USER_ID, userId); // تخزين الـ ID في التخزين المحلي
+             localStorage.setItem(LOCAL_STORAGE_USER_ID, userId); 
              
              showNotification(`أهلاً بك، ${currentUser.name}!`, 'success');
              switchToDashboard();
              loadProducts();
              loadMyProducts();
-             listenToUserBalance(userId); // بدء الاستماع للرصيد
+             listenToUserBalance(userId); 
         }
         
         // تسجيل الدخول
@@ -859,31 +885,26 @@
             loginError.style.display = 'none';
             
             try {
-                // البحث عن المستخدم في قاعدة البيانات
                 const userRef = ref(database, 'users/' + userId);
                 const snapshot = await get(userRef);
                 
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
                     
-                    // التحقق من كلمة المرور
                     if (userData.password === password) {
                         await completeLogin(userId, userData);
                     } else {
-                        // إظهار رسالة الخطأ الموحدة
                         loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة';
                         loginError.style.display = 'block';
-                        showNotification('كلمة المرور غير صحيحة', 'error');
+                        showNotification('فشل تسجيل الدخول: كلمة المرور غير صحيحة', 'error');
                     }
                 } else {
-                    // إظهار رسالة الخطأ الموحدة
                     loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة';
                     loginError.style.display = 'block';
-                    showNotification('رقم المستخدم غير موجود', 'error');
+                    showNotification('فشل تسجيل الدخول: رقم المستخدم غير موجود', 'error');
                 }
             } catch (error) {
                 console.error('خطأ في تسجيل الدخول/الاتصال:', error);
-                // رسالة موحدة للخطأ في الاتصال/التحقق
                 loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة'; 
                 loginError.style.display = 'block';
                 showNotification('فشل تسجيل الدخول. يرجى التأكد من بياناتك والاتصال بقاعدة البيانات.', 'error');
@@ -902,7 +923,7 @@
         // تسجيل الخروج
         logoutBtn.addEventListener('click', () => {
             if (userBalanceListener) {
-                userBalanceListener(); // إيقاف الاستماع للرصيد
+                userBalanceListener(); 
                 userBalanceListener = null;
             }
             currentUser = null;
@@ -914,20 +935,18 @@
         // الاستماع اللحظي لتحديث رصيد المستخدم
         function listenToUserBalance(userId) {
             if (userBalanceListener) {
-                userBalanceListener(); // إيقاف المستمع السابق إذا وجد
+                userBalanceListener(); 
             }
 
             const userMoneyRef = ref(database, 'users/' + userId + '/money');
 
-            // onValue ترجع دالة لإلغاء الاشتراك
             userBalanceListener = onValue(userMoneyRef, (snapshot) => {
                 const newBalance = snapshot.val();
                 if (currentUser && newBalance !== null) {
                     currentUser.money = newBalance;
                     userBalanceElement.textContent = newBalance.toFixed(2);
-                    modalUserBalance.textContent = newBalance.toFixed(2); // تحديث الرصيد في المودال أيضاً
+                    modalUserBalance.textContent = newBalance.toFixed(2); 
                     
-                    // تحديث الرصيد بعد الشراء في المودال إذا كان مفتوحاً
                     if(purchaseModal.style.display === 'flex' && selectedProduct) {
                          modalBalanceAfter.textContent = (newBalance - selectedProduct.price).toFixed(2);
                     }
@@ -944,7 +963,7 @@
             
             if (!userId) {
                 switchToAuth();
-                hideLoader(); // إخفاء التحميل إذا لم يكن هناك مستخدم مسجل
+                hideLoader(); 
                 return;
             }
 
@@ -956,9 +975,7 @@
                 
                 if (snapshot.exists()) {
                     await completeLogin(userId, snapshot.val());
-                    // لا نظهر إشعار نجاح هنا لأنه ليس تسجيل دخول فعلي جديد
                 } else {
-                    // لم يعد المستخدم موجوداً
                     localStorage.removeItem(LOCAL_STORAGE_USER_ID);
                     switchToAuth();
                 }
@@ -978,31 +995,47 @@
         function switchToDashboard() {
             authSection.style.display = 'none';
             dashboard.style.display = 'block';
+            fabAddProduct.style.display = 'flex'; // إظهار زر الإضافة العائم
             
             // تحديث معلومات المستخدم
             userNameElement.textContent = currentUser.name;
             displayUserIdElement.textContent = currentUser.id;
             userBalanceElement.textContent = (currentUser.money || 0).toFixed(2);
-            
-            // تنسيق تاريخ آخر دخول
-            if (currentUser.lastLogin) {
-                const lastLoginDate = new Date(currentUser.lastLogin);
-                lastLoginElement.textContent = lastLoginDate.toLocaleDateString('ar-SA') + 
-                    ' ' + lastLoginDate.toLocaleTimeString('ar-SA');
-            }
         }
         
         // التحويل إلى صفحة المصادقة
         function switchToAuth() {
             authSection.style.display = 'block';
             dashboard.style.display = 'none';
+            fabAddProduct.style.display = 'none'; // إخفاء زر الإضافة العائم
+            addProductModal.style.display = 'none'; // إغلاق المودال إذا كان مفتوحاً
             userIdInput.value = '';
             passwordInput.value = '';
             loginError.style.display = 'none';
             userIdInput.focus();
         }
-        
-        // ========== إدارة المنتجات ==========
+
+        // ========== إدارة مودال إضافة منتج (FAB) ==========
+
+        // فتح مودال إضافة المنتج عند الضغط على FAB
+        fabAddProduct.addEventListener('click', () => {
+            if (!currentUser) {
+                showNotification('يرجى تسجيل الدخول أولاً لإضافة منتج', 'error');
+                return;
+            }
+            // تفريغ الحقول قبل الفتح
+            productNameInput.value = '';
+            productPriceInput.value = '';
+            productStockInput.value = '1';
+            
+            addProductModal.style.display = 'flex';
+            productNameInput.focus();
+        });
+
+        // إغلاق مودال إضافة المنتج
+        cancelAddProductBtn.addEventListener('click', () => {
+            addProductModal.style.display = 'none';
+        });
         
         // إضافة منتج جديد
         addProductBtn.addEventListener('click', async () => {
@@ -1052,20 +1085,18 @@
                 
                 await set(productRef, productData);
                 
-                // تفريغ الحقول
-                productNameInput.value = '';
-                productPriceInput.value = '';
-                productStockInput.value = '1';
-                
                 showNotification('تم إضافة المنتج بنجاح!', 'success');
+                addProductModal.style.display = 'none'; // إغلاق المودال بعد النجاح
+                
             } catch (error) {
                 console.error('خطأ في إضافة المنتج:', error);
                 showNotification('خطأ في إضافة المنتج', 'error');
             } finally {
                 hideLoader();
-                productNameInput.focus();
             }
         });
+        
+        // ========== إدارة عرض المنتجات (القوائم) ==========
         
         // تحميل المنتجات المتاحة للشراء (باستخدام الاستماع اللحظي)
         function loadProducts() {
@@ -1088,7 +1119,6 @@
                 
                 const products = snapshot.val();
                 
-                // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
                 const productsArray = Object.keys(products).map(key => ({ 
                     id: key, 
                     ...products[key] 
@@ -1117,7 +1147,6 @@
                 if (snapshot.exists()) {
                     const products = snapshot.val();
                     
-                    // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
                     const productsArray = Object.keys(products).map(key => ({ 
                         id: key, 
                         ...products[key] 
@@ -1136,7 +1165,7 @@
                         <div class="empty-message">
                             <i class="fas fa-boxes"></i>
                             <h3>لم تقم بإضافة أي منتجات بعد</h3>
-                            <p>ابدأ بإضافة منتجك الأول!</p>
+                            <p>اضغط على زر <i class="fas fa-plus" style="color: var(--primary);"></i> لإضافة منتجك الأول!</p>
                         </div>
                     `;
                 }
@@ -1152,11 +1181,9 @@
             productCard.className = 'product-card';
             
             const isOutOfStock = product.stock <= 0;
-            // يجب التحقق من وجود currentUser لأنه قد يتم تشغيل loadProducts قبل تسجيل الدخول التلقائي
             const canBuy = currentUser && !isOutOfStock && currentUser.id !== product.sellerId; 
             const isMyProduct = currentUser && currentUser.id === product.sellerId;
             
-            // الحصول على الحرف الأول من اسم البائع
             const sellerInitial = product.sellerName ? product.sellerName.charAt(0) : '?';
             
             productCard.innerHTML = `
@@ -1268,7 +1295,6 @@
                         ...snapshot.val()
                     };
                     
-                    // تحديث رصيد المستخدم قبل العرض للتأكد من أحدث البيانات
                     const buyerRef = ref(database, 'users/' + currentUser.id);
                     const buyerSnapshot = await get(buyerRef);
                     const currentBalance = buyerSnapshot.val().money;
@@ -1288,7 +1314,6 @@
                         return;
                     }
                     
-                    // عرض نافذة التأكيد
                     modalProductName.textContent = selectedProduct.name;
                     modalProductPrice.textContent = selectedProduct.price.toFixed(2);
                     modalSellerName.textContent = selectedProduct.sellerName;
@@ -1335,7 +1360,7 @@
                     return;
                 }
                 
-                // 3. تنفيذ عملية الشراء (استخدام المعاملات لضمان التناسق في بيئة الإنتاج)
+                // 3. تنفيذ عملية الشراء 
                 
                 // أ) خصم المبلغ من رصيد المشتري
                 const newBuyerBalance = currentBuyerMoney - selectedProduct.price;
@@ -1364,7 +1389,6 @@
                     date: new Date().toISOString()
                 });
                 
-                // 4. تحديث بيانات المستخدم الحالي (سيتم تحديث الرصيد عبر المستمع اللحظي)
                 currentUser.money = newBuyerBalance;
                 
                 showNotification('تمت عملية الشراء بنجاح!', 'success');
@@ -1472,10 +1496,7 @@
         
         // التحقق من تسجيل الدخول عند تحميل الصفحة
         window.addEventListener('DOMContentLoaded', () => {
-             // إظهار اللودر أولاً قبل محاولة الاتصال التلقائي
              showLoader('جاري التحقق من حالة تسجيل الدخول...');
-             
-             // محاولة تسجيل الدخول التلقائي أو التحويل لصفحة المصادقة
              attemptAutoLogin();
         });
     </script>
