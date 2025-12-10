@@ -153,7 +153,8 @@
         
         .input-with-icon i {
             position: absolute;
-            right: 15px;
+            /* تم نقل الأيقونة لليسار قليلاً */
+            right: 15px; 
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-light);
@@ -400,7 +401,7 @@
             font-weight: 600;
             z-index: 1000;
             animation: slideIn 0.3s ease;
-            display: flex;
+            display: none; /* إخفاء مبدئيًا */
             align-items: center;
             gap: 15px;
             max-width: 400px;
@@ -563,7 +564,7 @@
         
         /* تحميل */
         .loader {
-            display: none;
+            display: flex; /* إظهار مبدئيًا حتى نهاية تحميل الكود */
             position: fixed;
             top: 0;
             left: 0;
@@ -646,11 +647,11 @@
 <body>
     <div id="loader" class="loader">
         <div class="loader-spinner"></div>
-        <p>جاري التحميل...</p>
+        <p>جاري الاتصال بقاعدة البيانات...</p>
     </div>
     
     <div class="container">
-        <div id="authSection" class="auth-section">
+        <div id="authSection" class="auth-section" style="display: none;">
             <div class="auth-form">
                 <h2><i class="fas fa-store"></i> Cash App المتجر</h2>
                 <div class="form-group">
@@ -671,7 +672,7 @@
                     <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
                 </button>
                 <p id="loginError" style="color: var(--danger); margin-top: 15px; text-align: center; display: none;">
-                    <i class="fas fa-exclamation-circle"></i> خطأ في اسم المستخدم أو كلمة المرور
+                    <i class="fas fa-exclamation-circle"></i> رقم المستخدم أو كلمة المرور غير صحيحة
                 </p>
             </div>
         </div>
@@ -689,7 +690,7 @@
                 </div>
                 <div class="balance">
                     <i class="fas fa-coins"></i>
-                    <span>الرصيد: <span id="userBalance">0</span> دولار</span>
+                    <span>الرصيد: <span id="userBalance">0.00</span> دولار</span>
                 </div>
             </header>
             
@@ -754,7 +755,7 @@
             </div>
         </div>
         
-        <div id="notification" class="notification" style="display: none;"></div>
+        <div id="notification" class="notification"></div>
     </div>
     
     <script type="module">
@@ -766,7 +767,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyAKGrxv_GT3T3krYeYY5C-o7VmvLkG-gw0",
             authDomain: "cashapp-405b7.firebaseapp.com",
-            databaseURL: "https://cashapp-d0507-default-rtdb.firebaseio.com", // تم التصحيح هنا
+            databaseURL: "https://cashapp-d0507-default-rtdb.firebaseio.com", 
             projectId: "cashapp-405b7",
             storageBucket: "cashapp-405b7.firebasestorage.app",
             messagingSenderId: "146496743526",
@@ -837,7 +838,7 @@
              
              localStorage.setItem(LOCAL_STORAGE_USER_ID, userId); // تخزين الـ ID في التخزين المحلي
              
-             showNotification('تم تسجيل الدخول بنجاح!', 'success');
+             showNotification(`أهلاً بك، ${currentUser.name}!`, 'success');
              switchToDashboard();
              loadProducts();
              loadMyProducts();
@@ -869,7 +870,7 @@
                     if (userData.password === password) {
                         await completeLogin(userId, userData);
                     } else {
-                        loginError.textContent = 'خطأ في كلمة المرور';
+                        loginError.textContent = 'كلمة المرور غير صحيحة';
                         loginError.style.display = 'block';
                         showNotification('كلمة المرور غير صحيحة', 'error');
                     }
@@ -880,7 +881,10 @@
                 }
             } catch (error) {
                 console.error('خطأ في تسجيل الدخول:', error);
-                showNotification('حدث خطأ أثناء تسجيل الدخول', 'error');
+                // رسالة موحدة للخطأ في الاتصال/التحقق
+                loginError.textContent = 'رقم المستخدم أو كلمة المرور غير صحيحة'; 
+                loginError.style.display = 'block';
+                showNotification('فشل تسجيل الدخول. يرجى التأكد من بياناتك والاتصال بالإنترنت.', 'error');
             } finally {
                 hideLoader();
             }
@@ -897,6 +901,7 @@
         logoutBtn.addEventListener('click', () => {
             if (userBalanceListener) {
                 userBalanceListener(); // إيقاف الاستماع للرصيد
+                userBalanceListener = null;
             }
             currentUser = null;
             localStorage.removeItem(LOCAL_STORAGE_USER_ID);
@@ -918,6 +923,12 @@
                 if (currentUser && newBalance !== null) {
                     currentUser.money = newBalance;
                     userBalanceElement.textContent = newBalance.toFixed(2);
+                    modalUserBalance.textContent = newBalance.toFixed(2); // تحديث الرصيد في المودال أيضاً
+                    
+                    // تحديث الرصيد بعد الشراء في المودال إذا كان مفتوحاً
+                    if(purchaseModal.style.display === 'flex' && selectedProduct) {
+                         modalBalanceAfter.textContent = (newBalance - selectedProduct.price).toFixed(2);
+                    }
                 }
             }, (error) => {
                 console.error('خطأ في الاستماع لتحديث الرصيد:', error);
@@ -928,12 +939,14 @@
         // محاولة تسجيل الدخول التلقائي
         async function attemptAutoLogin() {
             const userId = localStorage.getItem(LOCAL_STORAGE_USER_ID);
+            
             if (!userId) {
                 switchToAuth();
+                hideLoader(); // إخفاء التحميل إذا لم يكن هناك مستخدم مسجل
                 return;
             }
 
-            showLoader();
+            // showLoader() تم استدعاؤه بالفعل في بداية DOMContentLoaded
             
             try {
                 const userRef = ref(database, 'users/' + userId);
@@ -951,7 +964,7 @@
                 console.error('خطأ في تسجيل الدخول التلقائي:', error);
                 localStorage.removeItem(LOCAL_STORAGE_USER_ID);
                 switchToAuth();
-                showNotification('فشل تسجيل الدخول التلقائي', 'error');
+                showNotification('فشل تسجيل الدخول التلقائي. يرجى تسجيل الدخول يدوياً.', 'error');
             } finally {
                 hideLoader();
             }
@@ -983,6 +996,7 @@
             dashboard.style.display = 'none';
             userIdInput.value = '';
             passwordInput.value = '';
+            loginError.style.display = 'none';
             userIdInput.focus();
         }
         
@@ -1052,7 +1066,7 @@
             }
         });
         
-        // تحميل المنتجات المتاحة للشراء
+        // تحميل المنتجات المتاحة للشراء (باستخدام الاستماع اللحظي)
         function loadProducts() {
             const productsRef = ref(database, 'products');
             const productsQuery = query(productsRef, orderByChild('createdAt'));
@@ -1072,7 +1086,6 @@
                 }
                 
                 const products = snapshot.val();
-                let hasProducts = false;
                 
                 // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
                 const productsArray = Object.keys(products).map(key => ({ 
@@ -1081,26 +1094,15 @@
                 })).reverse(); 
 
                 productsArray.forEach(product => {
-                    hasProducts = true;
                     createProductCard(product, product.id);
                 });
-
-                if (!hasProducts) {
-                    productsList.innerHTML = `
-                        <div class="empty-message">
-                            <i class="fas fa-box-open"></i>
-                            <h3>لا توجد منتجات متاحة حالياً</h3>
-                            <p>كن أول من يضيف منتجاً!</p>
-                        </div>
-                    `;
-                }
             }, (error) => {
                 console.error('خطأ في تحميل المنتجات:', error);
                 showNotification('خطأ في تحميل المنتجات', 'error');
             });
         }
         
-        // تحميل منتجات المستخدم
+        // تحميل منتجات المستخدم (باستخدام الاستماع اللحظي)
         function loadMyProducts() {
             if (!currentUser) return;
             
@@ -1109,33 +1111,24 @@
             
             onValue(productsQuery, (snapshot) => {
                 myProductsList.innerHTML = '';
-                
-                if (!snapshot.exists()) {
-                    myProductsList.innerHTML = `
-                        <div class="empty-message">
-                            <i class="fas fa-boxes"></i>
-                            <h3>لم تقم بإضافة أي منتجات بعد</h3>
-                            <p>ابدأ بإضافة منتجك الأول!</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const products = snapshot.val();
                 let hasMyProducts = false;
                 
-                // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
-                const productsArray = Object.keys(products).map(key => ({ 
-                    id: key, 
-                    ...products[key] 
-                })).reverse();
-                
-                productsArray.forEach(product => {
-                    if (product.sellerId === currentUser.id) {
-                        hasMyProducts = true;
-                        createMyProductCard(product, product.id);
-                    }
-                });
+                if (snapshot.exists()) {
+                    const products = snapshot.val();
+                    
+                    // تحويل الكائن إلى مصفوفة للفرز وعرض الأحدث أولاً
+                    const productsArray = Object.keys(products).map(key => ({ 
+                        id: key, 
+                        ...products[key] 
+                    })).reverse();
+                    
+                    productsArray.forEach(product => {
+                        if (product.sellerId === currentUser.id) {
+                            hasMyProducts = true;
+                            createMyProductCard(product, product.id);
+                        }
+                    });
+                }
                 
                 if (!hasMyProducts) {
                     myProductsList.innerHTML = `
@@ -1467,7 +1460,8 @@
         }
         
         // عرض/إخفاء مؤشر التحميل
-        function showLoader() {
+        function showLoader(message = 'جاري الاتصال...') {
+            document.querySelector('#loader p').textContent = message;
             loader.style.display = 'flex';
         }
         
@@ -1477,7 +1471,11 @@
         
         // التحقق من تسجيل الدخول عند تحميل الصفحة
         window.addEventListener('DOMContentLoaded', () => {
-            attemptAutoLogin();
+             // إظهار اللودر أولاً قبل محاولة الاتصال التلقائي
+             showLoader('جاري التحقق من حالة تسجيل الدخول...');
+             
+             // محاولة تسجيل الدخول التلقائي أو التحويل لصفحة المصادقة
+             attemptAutoLogin();
         });
     </script>
 </body>
