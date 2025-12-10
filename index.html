@@ -53,9 +53,17 @@
             box-shadow: var(--shadow);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* محاذاة العناصر للأعلى */
             flex-wrap: wrap;
             gap: 20px;
+        }
+
+        .header-group { /* تجميع الشعار وزر الخروج */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            min-width: 250px;
         }
         
         .logo {
@@ -76,43 +84,37 @@
             flex-direction: column;
             align-items: flex-start; /* Alignment to the left in RTL */
             gap: 10px;
+            min-width: 300px;
         }
         
-        .user-info {
-            text-align: right;
+        .user-info, .balance {
             background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
             padding: 10px 15px;
             border-radius: 10px;
-            min-width: unset;
+            min-width: 100%;
+            text-align: right;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
-        .user-info h3 {
-            margin-bottom: 8px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-direction: row-reverse; /* For proper icon alignment */
-        }
-        
+
         .user-info p {
             font-size: 15px;
             opacity: 1;
-            display: block;
-            margin-bottom: 0;
+            margin-bottom: 5px; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-direction: row-reverse; /* لجعل النص يسبق الأيقونة في RTL */
+            justify-content: flex-end; /* لضمان بدء المحتوى من اليمين */
         }
         
         .balance {
-            background: var(--white); /* تغيير اللون للخلفية البيضاء */
-            color: var(--text); /* تغيير لون النص */
-            padding: 10px 15px;
-            border-radius: 10px;
             font-weight: 700;
             font-size: 18px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            justify-content: flex-end; /* لضمان بدء المحتوى من اليمين */
         }
         
         /* قسم تسجيل الدخول */
@@ -417,7 +419,7 @@
             font-weight: 600;
             z-index: 1000;
             animation: slideIn 0.3s ease;
-            display: none; /* إخفاء مبدئيًا */
+            display: none;
             align-items: center;
             gap: 15px;
             max-width: 400px;
@@ -467,7 +469,7 @@
         }
 
         #addProductModal .modal {
-            max-width: 600px; /* توسيع مودال إضافة المنتج قليلاً */
+            max-width: 600px; 
         }
         
         @keyframes modalFadeIn {
@@ -518,13 +520,13 @@
         .fab {
             position: fixed;
             bottom: 30px;
-            left: 30px; /* اليسار في وضع RTL */
+            left: 30px; 
             width: 60px;
             height: 60px;
             background: var(--primary);
             color: var(--white);
-            border-radius: 15px; /* شكل مربع بزوايا مستديرة */
-            display: none; /* إخفاء مبدئيا */
+            border-radius: 15px; 
+            display: none; 
             justify-content: center;
             align-items: center;
             font-size: 28px;
@@ -553,15 +555,20 @@
             
             header {
                 flex-direction: column;
-                text-align: center;
+                align-items: center;
             }
             
-            .user-details-group {
-                align-items: center; /* توسيط العناصر في وضع الجوال */
+            .header-group, .user-details-group {
+                align-items: center; 
+                width: 100%;
             }
 
-            .user-info {
-                text-align: center;
+            .user-details-group {
+                order: -1; /* لجعل معلومات المستخدم تظهر قبل الشعار في الجوال */
+            }
+
+            .user-info p, .balance {
+                justify-content: center; 
             }
         }
         
@@ -657,7 +664,7 @@
     <div class="container">
         <div id="authSection" class="auth-section" style="display: none;">
             <div class="auth-form">
-                <h2><i class="fas fa-store"></i> Cash App المتجر</h2>
+                <h2><i class="fas fa-store"></i> MalgrayShop</h2>
                 <div class="form-group">
                     <label for="userId"><i class="fas fa-user"></i> رقم المستخدم (ID)</label>
                     <div class="input-with-icon">
@@ -683,18 +690,29 @@
         
         <div id="dashboard" style="display: none;">
             <header>
-                <div class="logo">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cash App المتجر</span>
+                <div class="header-group">
+                    <div class="logo">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>MalgrayShop</span>
+                    </div>
+                    <button id="logoutBtn" class="btn btn-primary btn-small">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
                 </div>
                 
                 <div class="user-details-group">
                     <div class="user-info">
-                        <h3 id="userName"><i class="fas fa-user-circle"></i> اسم المستخدم</h3>
-                        <p><i class="fas fa-id-badge"></i> رقم المستخدم: <span id="displayUserId">---</span></p>
-                        </div>
+                        <p style="font-weight: 700;">
+                            <i class="fas fa-user-circle" style="color: var(--accent);"></i> 
+                            اسم المستخدم: <span id="userNameDisplay">---</span>
+                        </p>
+                        <p>
+                            <i class="fas fa-id-badge"></i> 
+                            رقم المستخدم (ID): <span id="displayUserId">---</span>
+                        </p>
+                    </div>
                     <div class="balance">
-                        <i class="fas fa-coins"></i>
+                        <i class="fas fa-coins" style="color: var(--accent);"></i>
                         <span>الرصيد: <span id="userBalance">0.00</span> دولار</span>
                     </div>
                 </div>
@@ -705,10 +723,7 @@
                     <h2 class="section-title">
                         <i class="fas fa-shopping-bag"></i> المنتجات المتاحة للشراء
                     </h2>
-                    <button id="logoutBtn" class="btn btn-danger">
-                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-                    </button>
-                </div>
+                    </div>
                 <div id="productsList" class="products-grid"></div>
             </section>
             
@@ -717,11 +732,11 @@
                     <i class="fas fa-list-alt"></i> منتجاتي المعروضة
                 </h3>
                 <div id="myProductsList" class="my-products-list"></div>
-                </div>
+            </div>
             
             <footer>
                 <p><i class="fas fa-code"></i> تم التطوير باستخدام Firebase Realtime Database</p>
-                <p>© 2025 Cash App - جميع الحقوق محفوظة</p>
+                <p>© 2025 MalgrayShop - جميع الحقوق محفوظة</p>
             </footer>
         </div>
         
@@ -805,13 +820,12 @@
         const dashboard = document.getElementById('dashboard');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
-        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutBtn = document.getElementById('logoutBtn'); // زر الخروج الجديد
         const userIdInput = document.getElementById('userId');
         const passwordInput = document.getElementById('password');
-        const userNameElement = document.getElementById('userName');
+        const userNameDisplayElement = document.getElementById('userNameDisplay'); // تم تغيير الـ ID
         const displayUserIdElement = document.getElementById('displayUserId');
         const userBalanceElement = document.getElementById('userBalance');
-        // const lastLoginElement = document.getElementById('lastLogin'); // تم حذفه من HTML
         const productsList = document.getElementById('productsList');
         const myProductsList = document.getElementById('myProductsList');
         
@@ -995,10 +1009,10 @@
         function switchToDashboard() {
             authSection.style.display = 'none';
             dashboard.style.display = 'block';
-            fabAddProduct.style.display = 'flex'; // إظهار زر الإضافة العائم
+            fabAddProduct.style.display = 'flex'; 
             
-            // تحديث معلومات المستخدم
-            userNameElement.textContent = currentUser.name;
+            // تحديث معلومات المستخدم (باستخدام العنصر الجديد)
+            userNameDisplayElement.textContent = currentUser.name; 
             displayUserIdElement.textContent = currentUser.id;
             userBalanceElement.textContent = (currentUser.money || 0).toFixed(2);
         }
@@ -1007,8 +1021,8 @@
         function switchToAuth() {
             authSection.style.display = 'block';
             dashboard.style.display = 'none';
-            fabAddProduct.style.display = 'none'; // إخفاء زر الإضافة العائم
-            addProductModal.style.display = 'none'; // إغلاق المودال إذا كان مفتوحاً
+            fabAddProduct.style.display = 'none'; 
+            addProductModal.style.display = 'none'; 
             userIdInput.value = '';
             passwordInput.value = '';
             loginError.style.display = 'none';
@@ -1161,11 +1175,12 @@
                 }
                 
                 if (!hasMyProducts) {
+                    // 3. حذف الإشارة المباشرة لزر الإضافة
                     myProductsList.innerHTML = `
                         <div class="empty-message">
                             <i class="fas fa-boxes"></i>
                             <h3>لم تقم بإضافة أي منتجات بعد</h3>
-                            <p>اضغط على زر <i class="fas fa-plus" style="color: var(--primary);"></i> لإضافة منتجك الأول!</p>
+                            <p>ابدأ بعرض منتجاتك الآن!</p>
                         </div>
                     `;
                 }
