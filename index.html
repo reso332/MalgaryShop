@@ -491,11 +491,36 @@
             gap: 12px;
         }
         
-        .modal p {
-            margin-bottom: 15px;
-            font-size: 16px;
+        /* تنسيق لصفوف معلومات المودال */
+        .modal-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
             padding: 10px 0;
             border-bottom: 1px solid var(--gray);
+            font-size: 16px;
+        }
+
+        .modal-info-row strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .modal-info-row:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal-info-row.balance-after {
+            font-size: 18px;
+            padding-top: 15px;
+            border-top: 2px solid var(--primary);
+            margin-top: 15px;
+        }
+
+        .modal-info-row.balance-after strong {
+            color: var(--danger-dark);
         }
         
         .modal-buttons {
@@ -658,6 +683,14 @@
             margin-bottom: 20px;
             color: var(--gray);
         }
+
+        /* تنسيق خاص لحقل الكمية في المودال */
+        #quantityFormGroup {
+            margin-bottom: 25px;
+            padding: 10px;
+            background: var(--secondary);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -780,13 +813,22 @@
         <div id="purchaseModal" class="modal-overlay">
             <div class="modal">
                 <h3><i class="fas fa-shopping-cart"></i> تأكيد عملية الشراء</h3>
-                <p>المنتج: <strong id="modalProductName"></strong></p>
-                <p>السعر: <strong id="modalProductPrice"></strong> $</p>
-                <p>البائع: <strong id="modalSellerName"></strong> (ID: <span id="modalSellerId"></span>)</p>
-                <p>رصيدك الحالي: <strong id="modalUserBalance"></strong> $</p>
-                <p>الرصيد بعد الشراء: <strong id="modalBalanceAfter"></strong> $</p>
+                
+                <div class="modal-info-row"><span>المنتج:</span> <strong id="modalProductName"></strong></div>
+                <div class="modal-info-row"><span>سعر الوحدة:</span> <strong><span id="modalProductPrice"></span> $</strong></div>
+                <div class="modal-info-row"><span>البائع:</span> <strong><span id="modalSellerName"></span> (ID: <span id="modalSellerId"></span>)</strong></div>
+                
+                <div id="quantityFormGroup" class="form-group">
+                    <label for="quantityInput"><i class="fas fa-sort-amount-up"></i> كمية الشراء (الحد الأقصى: <span id="maxQuantity">0</span>)</label>
+                    <input type="number" id="quantityInput" value="1" min="1" oninput="updatePurchaseDetails()">
+                </div>
+
+                <div class="modal-info-row"><span>التكلفة الإجمالية:</span> <strong><span id="modalTotalPrice"></span> $</strong></div>
+                <div class="modal-info-row"><span>رصيدك الحالي:</span> <strong><span id="modalUserBalance"></span> $</strong></div>
+                <div class="modal-info-row balance-after"><span>الرصيد بعد الشراء:</span> <strong><span id="modalBalanceAfter"></span> $</strong></div>
+                
                 <div class="modal-buttons">
-                    <button id="confirmPurchaseBtn" class="btn btn-primary">
+                    <button id="confirmPurchaseBtn" class="btn btn-primary" disabled>
                         <i class="fas fa-check-circle"></i> نعم، تأكيد الشراء
                     </button>
                     <button id="cancelPurchaseBtn" class="btn">
@@ -851,6 +893,9 @@
         const modalSellerId = document.getElementById('modalSellerId');
         const modalUserBalance = document.getElementById('modalUserBalance');
         const modalBalanceAfter = document.getElementById('modalBalanceAfter');
+        const modalTotalPrice = document.getElementById('modalTotalPrice');
+        const quantityInput = document.getElementById('quantityInput'); // ✨ العنصر الجديد
+        const maxQuantityElement = document.getElementById('maxQuantity'); // ✨ العنصر الجديد
         const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
         const cancelPurchaseBtn = document.getElementById('cancelPurchaseBtn');
         const notification = document.getElementById('notification');
@@ -968,8 +1013,9 @@
                     // تحديث الرصيد في المودال وتغيير العملة
                     modalUserBalance.textContent = newBalance.toFixed(2); 
                     
+                    // تحديث تفاصيل الشراء في حال كان المودال مفتوحًا
                     if(purchaseModal.style.display === 'flex' && selectedProduct) {
-                         modalBalanceAfter.textContent = (newBalance - selectedProduct.price).toFixed(2);
+                         updatePurchaseDetails();
                     }
                 }
             }, (error) => {
@@ -1202,6 +1248,7 @@
             productCard.className = 'product-card';
             
             const isOutOfStock = product.stock <= 0;
+            // يمكن الشراء إذا كان المستخدم مسجلاً، والكمية أكبر من صفر، والمنتج ليس للمستخدم نفسه
             const canBuy = currentUser && !isOutOfStock && currentUser.id !== product.sellerId; 
             const isMyProduct = currentUser && currentUser.id === product.sellerId;
             
@@ -1230,7 +1277,8 @@
                     </div>
                     <div class="product-actions">
                         ${canBuy ? 
-                            `<button class="btn btn-primary btn-small" onclick="preparePurchase('${productId}')">
+                            // ✨ تعديل: عند الضغط يتم فتح نافذة تحديد الكمية
+                            `<button class="btn btn-primary btn-small" onclick="preparePurchase('${productId}', 1)"> 
                                 <i class="fas fa-shopping-cart"></i> شراء
                             </button>` : 
                             isMyProduct ?
@@ -1295,7 +1343,46 @@
             myProductsList.appendChild(productCard);
         }
         
-        // ========== إدارة عمليات الشراء ==========
+        // ========== إدارة عمليات الشراء (بالكمية) ==========
+
+        // تحديث تفاصيل الشراء (الإجمالي والرصيد بعد)
+        window.updatePurchaseDetails = function() {
+            if (!selectedProduct || !currentUser) return;
+
+            const quantity = parseInt(quantityInput.value);
+            const currentBalance = currentUser.money;
+            const productPrice = selectedProduct.price;
+            const maxStock = selectedProduct.stock;
+
+            // 1. تحقق من صحة الكمية
+            let finalQuantity = isNaN(quantity) || quantity < 1 ? 1 : quantity;
+            finalQuantity = Math.min(finalQuantity, maxStock);
+            
+            // تحديث قيمة حقل الكمية بالكمية الصحيحة
+            quantityInput.value = finalQuantity; 
+
+            // 2. حساب التكلفة الإجمالية
+            const totalPrice = finalQuantity * productPrice;
+            const balanceAfter = currentBalance - totalPrice;
+
+            // 3. تحديث عناصر DOM
+            modalTotalPrice.textContent = totalPrice.toFixed(2);
+            modalBalanceAfter.textContent = balanceAfter.toFixed(2);
+            
+            // 4. تفعيل/إلغاء زر التأكيد
+            const isSufficientBalance = balanceAfter >= 0;
+            confirmPurchaseBtn.disabled = !isSufficientBalance;
+            
+            // تغيير لون الرصيد بعد الشراء في حالة عدم الكفاية
+            modalBalanceAfter.parentElement.classList.toggle('balance-after', !isSufficientBalance);
+
+            if (!isSufficientBalance) {
+                showNotification('رصيدك غير كافٍ لتغطية التكلفة الإجمالية', 'error', false);
+            } else if (finalQuantity !== quantity) {
+                 showNotification(`تم تعديل الكمية إلى ${finalQuantity} لأنها الحد الأقصى المتاح`, 'info', false);
+            }
+        };
+
         
         // التحضير لعملية الشراء
         window.preparePurchase = async function(productId) {
@@ -1316,9 +1403,7 @@
                         ...snapshot.val()
                     };
                     
-                    const buyerRef = ref(database, 'users/' + currentUser.id);
-                    const buyerSnapshot = await get(buyerRef);
-                    const currentBalance = buyerSnapshot.val().money;
+                    const currentBalance = currentUser.money; // استخدام الرصيد الحالي للمستخدم
                     
                     if (selectedProduct.stock <= 0) {
                         showNotification('نفذت كمية هذا المنتج', 'error');
@@ -1331,16 +1416,25 @@
                     }
                     
                     if (currentBalance < selectedProduct.price) {
-                        showNotification('رصيدك غير كافٍ للشراء', 'error');
+                        showNotification('رصيدك غير كافٍ لشراء وحدة واحدة على الأقل', 'error');
                         return;
                     }
                     
+                    // إعداد قيم المودال
                     modalProductName.textContent = selectedProduct.name;
                     modalProductPrice.textContent = selectedProduct.price.toFixed(2);
                     modalSellerName.textContent = selectedProduct.sellerName;
                     modalSellerId.textContent = selectedProduct.sellerId;
                     modalUserBalance.textContent = currentBalance.toFixed(2);
-                    modalBalanceAfter.textContent = (currentBalance - selectedProduct.price).toFixed(2);
+
+                    // إعداد حقل الكمية
+                    maxQuantityElement.textContent = selectedProduct.stock;
+                    quantityInput.max = selectedProduct.stock;
+                    quantityInput.value = 1; // القيمة الافتراضية
+                    
+                    // تحديث التفاصيل بناءً على الكمية الافتراضية
+                    updatePurchaseDetails(); 
+
                     purchaseModal.style.display = 'flex';
                 } else {
                     showNotification('المنتج غير موجود', 'error');
@@ -1352,20 +1446,38 @@
                 hideLoader();
             }
         };
+
+        // ربط دالة تحديث التفاصيل بحدث الإدخال في حقل الكمية
+        quantityInput.addEventListener('input', updatePurchaseDetails);
         
         // تأكيد عملية الشراء
         confirmPurchaseBtn.addEventListener('click', async () => {
             if (!selectedProduct || !currentUser) return;
             
+            const quantity = parseInt(quantityInput.value);
+            const totalPrice = quantity * selectedProduct.price;
+
+            // التحقق النهائي قبل البدء بالمعاملة
+            if (quantity <= 0 || quantity > selectedProduct.stock) {
+                 showNotification('كمية الشراء غير صالحة أو تتجاوز المخزون', 'error');
+                 return;
+            }
+
+            if (currentUser.money < totalPrice) {
+                 showNotification('رصيدك غير كافٍ. يرجى مراجعة الرصيد.', 'error');
+                 return;
+            }
+
             showLoader('جاري إتمام عملية الشراء...');
             
             try {
                 // 1. التحقق من أن المنتج لا يزال متاحاً
                 const productRef = ref(database, 'products/' + selectedProduct.id);
                 const productSnapshot = await get(productRef);
-                
-                if (!productSnapshot.exists() || productSnapshot.val().stock <= 0) {
-                    showNotification('نفذت كمية هذا المنتج', 'error');
+                const currentProductStock = productSnapshot.val().stock;
+
+                if (!productSnapshot.exists() || currentProductStock < quantity) {
+                    showNotification('نفذت كمية هذا المنتج أو تغيرت الكمية المتاحة', 'error');
                     purchaseModal.style.display = 'none';
                     return;
                 }
@@ -1375,7 +1487,7 @@
                 const buyerSnapshot = await get(buyerRef);
                 const currentBuyerMoney = buyerSnapshot.val().money;
                 
-                if (!buyerSnapshot.exists() || currentBuyerMoney < selectedProduct.price) {
+                if (!buyerSnapshot.exists() || currentBuyerMoney < totalPrice) {
                     showNotification('رصيدك غير كافٍ. تم تحديث رصيدك.', 'error');
                     purchaseModal.style.display = 'none';
                     return;
@@ -1384,17 +1496,17 @@
                 // 3. تنفيذ عملية الشراء 
                 
                 // أ) خصم المبلغ من رصيد المشتري
-                const newBuyerBalance = currentBuyerMoney - selectedProduct.price;
+                const newBuyerBalance = currentBuyerMoney - totalPrice;
                 await update(buyerRef, { money: newBuyerBalance });
                 
                 // ب) إضافة المبلغ إلى رصيد البائع
                 const sellerRef = ref(database, 'users/' + selectedProduct.sellerId);
                 const sellerSnapshot = await get(sellerRef);
-                const newSellerBalance = (sellerSnapshot.val().money || 0) + selectedProduct.price;
+                const newSellerBalance = (sellerSnapshot.val().money || 0) + totalPrice;
                 await update(sellerRef, { money: newSellerBalance });
                 
                 // ج) تقليل كمية المنتج
-                const newStock = productSnapshot.val().stock - 1;
+                const newStock = currentProductStock - quantity;
                 await update(productRef, { stock: newStock });
                 
                 // د) تسجيل عملية الشراء
@@ -1402,17 +1514,19 @@
                 await set(purchaseRef, {
                     productId: selectedProduct.id,
                     productName: selectedProduct.name,
+                    quantity: quantity, // ✨ إضافة كمية الشراء
                     buyerId: currentUser.id,
                     buyerName: currentUser.name,
                     sellerId: selectedProduct.sellerId,
                     sellerName: selectedProduct.sellerName,
-                    price: selectedProduct.price,
+                    pricePerUnit: selectedProduct.price, // سعر الوحدة
+                    totalPrice: totalPrice, // السعر الإجمالي
                     date: new Date().toISOString()
                 });
                 
                 currentUser.money = newBuyerBalance;
                 
-                showNotification('تمت عملية الشراء بنجاح!', 'success');
+                showNotification(`تمت عملية الشراء بنجاح! تم شراء ${quantity} وحدة.`, 'success');
                 purchaseModal.style.display = 'none';
                 selectedProduct = null;
                 
@@ -1492,7 +1606,7 @@
         // ========== أدوات مساعدة ==========
         
         // عرض الإشعارات
-        function showNotification(message, type) {
+        function showNotification(message, type, autoHide = true) {
             notification.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
@@ -1500,9 +1614,11 @@
             notification.className = `notification ${type}`;
             notification.style.display = 'flex';
             
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 4000);
+            if (autoHide) {
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 4000);
+            }
         }
         
         // عرض/إخفاء مؤشر التحميل
